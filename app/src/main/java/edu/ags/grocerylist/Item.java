@@ -1,11 +1,12 @@
 package edu.ags.grocerylist;
 
 public class Item {
-    public int Id;
+
     public String Name;
     public boolean CheckedState;
+    public int Id;
 
-    public Item(int id, String name, boolean checkedState)
+    public Item(int id , String name, boolean checkedState)
     {
         Id = id;
         Name = name;
@@ -16,5 +17,21 @@ public class Item {
     {
         return Id + "|" + Name + "|" + CheckedState;
     }
+
+
+    public int getId()
+    {
+        return Id;
+    }
+
+    public Item()
+    {
+        Id = -1;
+    }
+    public void setName(String name)
+    {
+        Name = name;
+    }
+    public void setCheckedState(Boolean checkedState) {CheckedState = checkedState;}
 
 }

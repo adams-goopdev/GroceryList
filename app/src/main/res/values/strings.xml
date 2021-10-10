@@ -11,4 +11,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="master_list">Master List</string>
     <string name="shopping_list">Shopping List</string>
+    <string name="AddItem">Add Item</string>
+    <string name="add_item_to_master">Add Item to Master?</string>
 </resources>

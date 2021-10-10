@@ -22,8 +22,7 @@ public class ShoppingList extends AppCompatActivity {
 
     ItemAdapterSL itemAdapter;
     RecyclerView itemList;
-    CheckBox checkBox;
-    TextView textView;
+
 
 
 
@@ -44,7 +43,6 @@ public class ShoppingList extends AppCompatActivity {
         {
             super.onResume();
 
-            checkBox = findViewById(R.id.cbML);
 
             itemList = findViewById(R.id.rvShoppingItems);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -69,8 +67,7 @@ public class ShoppingList extends AppCompatActivity {
 
     }
 
-    private void ReadFromTextFile()
-    {
+    private void ReadFromTextFile() {
 
         FileIO fileIO = new FileIO();
 

@@ -32,15 +32,15 @@ public class MasterList extends AppCompatActivity {
         Log.d(TAG, "onCreate: Before read");
 
         items = new ArrayList<Item>();
-/*
-        items.add(new Item(1,"Bubbly",true));
+
+    /*    items.add(new Item(1,"Bubbly",true));
         items.add(new Item(2,"Eggs",false));
         items.add(new Item(3,"Yogurt",true));
 */
 
 
-        ReadFromTextFile();
-        //WriteToTextFile();
+      ReadFromTextFile();
+       //WriteToTextFile();
 
         this.setTitle("Master List");
 

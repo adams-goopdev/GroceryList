@@ -82,7 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
+       else if (id == R.id.AddItem)
+        {
+            startActivity(new Intent(this, AddItem.class));
 
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ public class MasterList extends AppCompatActivity {
     ItemAdapter itemAdapter;
     RecyclerView itemList;
     TextView textView;
-
+CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,18 @@ public class MasterList extends AppCompatActivity {
        //WriteToTextFile();
 
         this.setTitle("Master List");
-
-
     }
 
-    private void ReadFromTextFile()
-    {
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+            int position = viewHolder.getAdapterPosition();
+            Log.d(TAG, "onClick: " + items.get(position).Name);
+        }
+    };
+
+    private void ReadFromTextFile() {
 
         FileIO fileIO = new FileIO();
 
@@ -78,6 +85,8 @@ public class MasterList extends AppCompatActivity {
         fileIO.writeFile(this,data);
     }
 
+    
+
     @Override
     public void onResume() {
         try
@@ -88,7 +97,10 @@ public class MasterList extends AppCompatActivity {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             itemList.setLayoutManager(layoutManager);
 
+
+
             itemAdapter = new ItemAdapter(items, this);
+            itemAdapter.setOnClickListener(onClickListener);
             itemList.setAdapter(itemAdapter);
 
             for (Item t: items)

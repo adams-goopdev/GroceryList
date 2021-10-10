@@ -9,34 +9,37 @@
     <EditText
         android:id="@+id/etAddItem"
         android:layout_width="wrap_content"
-        android:layout_height="47dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="150dp"
+        android:paddingTop="100dp"
         android:paddingBottom="10dp"
-        android:text="@string/AddItem"
-        app:layout_constraintBottom_toTopOf="@id/btnAddItem"
-        />
+        android:layout_marginLeft="100dp"
+
+        android:textSize="24dp"
+        android:hint="@string/AddItem"
+        app:layout_constraintStart_toStartOf="parent"
+
+
+        tools:layout_editor_absoluteY="0dp" />
 
     <Button
         android:id="@+id/btnAddItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="149dp"
-        android:layout_marginEnd="168dp"
-        android:layout_marginBottom="312dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginLeft="100dp"
+        android:text="AddItem"
+        app:layout_constraintTop_toBottomOf="@id/cbAddItem"
+
+
+         />
 
     <CheckBox
         android:id="@+id/cbAddItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="240dp"
+        android:layout_marginLeft="100dp"
         android:text="@string/add_item_to_master"
-        tools:layout_editor_absoluteX="248dp"
-        tools:layout_editor_absoluteY="312dp"
-        app:layout_constraintLeft_toRightOf="@id/etAddItem"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:paddingRight="10dp"/>
+        app:layout_constraintTop_toBottomOf="@id/etAddItem"
+        app:layout_constraintBottom_toTopOf="@id/btnAddItem"
+        tools:layout_editor_absoluteY="64dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

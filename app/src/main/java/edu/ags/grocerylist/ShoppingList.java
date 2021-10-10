@@ -20,7 +20,7 @@ public class ShoppingList extends AppCompatActivity {
     Item item;
     ArrayList<Item> items;
 
-    ItemAdapter itemAdapter;
+    ItemAdapterSL itemAdapter;
     RecyclerView itemList;
     CheckBox checkBox;
     TextView textView;
@@ -50,7 +50,7 @@ public class ShoppingList extends AppCompatActivity {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             itemList.setLayoutManager(layoutManager);
 
-            itemAdapter = new ItemAdapter(items, this);
+            itemAdapter = new ItemAdapterSL(items, this);
 
            itemList.setAdapter(itemAdapter);
 

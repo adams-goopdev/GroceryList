@@ -60,6 +60,12 @@ public class ShoppingList extends AppCompatActivity {
 
             return true;
         }
+/*        else if (id == R.id.DeleteItems)
+        {
+            startActivity(new Intent(this, DeleteItem.class));
+
+            return true;
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

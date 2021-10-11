@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,7 +26,7 @@ public class MasterList extends AppCompatActivity {
     ItemAdapter itemAdapter;
     RecyclerView itemList;
     TextView textView;
-CheckBox checkBox;
+    CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,15 @@ CheckBox checkBox;
 
         items = new ArrayList<Item>();
 
-    /*    items.add(new Item(1,"Bubbly",true));
-        items.add(new Item(2,"Eggs",false));
-        items.add(new Item(3,"Yogurt",true));
+/*
+      items.add(new Item(0,"Bubbly",true));
+        items.add(new Item(1,"Eggs",false));
+        items.add(new Item(2,"Yogurt",true));
 */
 
 
-      ReadFromTextFile();
+
+     ReadFromTextFile();
        //WriteToTextFile();
 
         this.setTitle("Master List");
@@ -51,7 +56,14 @@ CheckBox checkBox;
         public void onClick(View view) {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
-            Log.d(TAG, "onClick: " + items.get(position).Name);
+            int itemID = items.get(position).getId();
+            Log.d(TAG, "onClick: asdfasdfasdfasdfasddfasdf" + items.get(position).Name + itemID + " " + position);
+
+            Intent intent = new Intent(MasterList.this, DeleteItem.class);
+            intent.putExtra("itemId", itemID);
+            startActivity(intent);
+
+            Log.d(TAG, "onClick: Send to delete");
         }
     };
 
@@ -115,8 +127,52 @@ CheckBox checkBox;
             Log.d(TAG, "onResume: " + e.getMessage());
         }
 
+        ReadFromTextFile();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.masterList) {
+
+            //Navigate to Master List activity
+            startActivity(new Intent(this, MasterList.class));
+
+            return true;
+        }
+        else if (id == R.id.ShoppingList)
+        {
+            startActivity(new Intent(this, ShoppingList.class));
+
+            return true;
+        }
+        else if (id == R.id.AddItem)
+        {
+            startActivity(new Intent(this, AddItem.class));
+
+            return true;
+        }
+/*        else if (id == R.id.DeleteItems)
+        {
+            startActivity(new Intent(this, DeleteItem.class));
+
+            return true;
+        }*/
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

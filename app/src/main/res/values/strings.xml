@@ -13,4 +13,6 @@
     <string name="shopping_list">Shopping List</string>
     <string name="AddItem">Add Item</string>
     <string name="add_item_to_master">Add Item to Master?</string>
+    <string name="UncheckItems">uncheckItems</string>
+    <string name="DeleteItems">Delete Items</string>
 </resources>

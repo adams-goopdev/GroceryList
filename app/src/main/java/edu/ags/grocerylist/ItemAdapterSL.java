@@ -46,6 +46,8 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
         Log.d(TAG, "ItemAdapter: " + arrayList.size());
     }
 
+
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -33,11 +33,11 @@ public class AddItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
+        this.setTitle("Add Item");
         ReadFromTextFile();
-        item = new Item();
 
         initAddItem();
-        Log.d(TAG, "onCreate: " + item.Id);
+        Log.d(TAG, "onCreate: End of Oncreate " );
     }
 
 
@@ -52,18 +52,32 @@ public class AddItem extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "initAddItem: Did I make it here 2 ");
 
+                item = new Item();
+
                 try{
                     if(item.Id == -1)
                     {
+                        if (items.size() == 0 )
+                        {
+                            item.setId(0);
+                            Log.d(TAG, "onClick: Adding first item" );
+                            item.setName(editText.getText().toString());
+                            item.CheckedState = checkBox.isChecked();
 
-                        item.Id = items.get(items.size() -1 ).Id + 1;
-                        Log.d(TAG, "onClick: before get text" );
-                        item.setName(editText.getText().toString());
-                        item.CheckedState = checkBox.isChecked();
+                            items.add(item);
+                        }
+                        else if(items.size() !=0)
+                        {
+                            Log.d(TAG, "OnClick: not the first item " + items.size());
+                            item.Id = items.get(items.size() -1 ).Id + 1;
+                            Log.d(TAG, "onClick: before get text" );
+                            item.setName(editText.getText().toString());
+                            item.CheckedState = checkBox.isChecked();
 
-                        items.add(item);
-                        Log.d(TAG, "onClick: " + item.Name);
+                            items.add(item);
+                            Log.d(TAG, "onClick: adding new item" + item.Name);
 
+                        }
 
                         editText.setText("");
                         checkBox.setChecked(false);
@@ -73,7 +87,7 @@ public class AddItem extends AppCompatActivity {
                 }
                 catch (Exception e)
                 {
-                    Log.d(TAG, "onClick: " + e.getMessage());
+                    Log.d(TAG, "onClick: test " + e.getMessage());
                 }
 
 

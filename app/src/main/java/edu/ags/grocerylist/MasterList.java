@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -37,19 +38,71 @@ public class MasterList extends AppCompatActivity {
 
         items = new ArrayList<Item>();
 
-/*
-      items.add(new Item(0,"Bubbly",true));
-        items.add(new Item(1,"Eggs",false));
-        items.add(new Item(2,"Yogurt",true));
-*/
 
+
+/*      items.add(new Item(1,"Bubbly",true));
+        items.add(new Item(2,"Eggs",false));
+        items.add(new Item(3,"Yogurt",true));*/
 
 
      ReadFromTextFile();
        //WriteToTextFile();
 
         this.setTitle("Master List");
+
+        Button btnUncheckAll = findViewById(R.id.btnUncheckAll);
+        btnUncheckAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                for (Item t: items)
+                {
+
+                    Log.d(TAG, "onClick: Did I make it here for the uncheck?1");
+                    try {
+
+                        Log.d(TAG, "onClick: Uncheck this item" + t.Name +" "+ t.CheckedState );
+                        t.setCheckedState(false);
+                        //Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
+                        WriteToTextFile();
+
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d(TAG, "onClick: This happened" + e.getMessage());
+                    }
+                    finish();
+                    startActivity(getIntent());
+
+                }
+
+
+            }
+
+        });
+
+
+        Button btnDeleteAll = findViewById(R.id.btnDeleteAll);
+        btnDeleteAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                items.clear();
+
+                Log.d(TAG, "onClick: Items have been removed" );
+                WriteToTextFile();
+
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+
     }
+
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -85,7 +138,12 @@ public class MasterList extends AppCompatActivity {
         for(String s : strData)
         {
             data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Boolean.parseBoolean(data[2])));
+
+            if (Integer.parseInt(data[0]) != -5) {
+
+                items.add(new Item(Integer.parseInt(data[0]), data[1], Boolean.parseBoolean(data[2])));
+            }
+
         }
     }
 
@@ -108,7 +166,6 @@ public class MasterList extends AppCompatActivity {
             itemList = findViewById(R.id.rvItems);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             itemList.setLayoutManager(layoutManager);
-
 
 
             itemAdapter = new ItemAdapter(items, this);

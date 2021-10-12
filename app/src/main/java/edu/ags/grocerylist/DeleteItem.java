@@ -26,6 +26,7 @@ public class DeleteItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_item);
 
+        this.setTitle("Edit Item");
 
         Bundle extras = getIntent().getExtras();
 
@@ -59,10 +60,14 @@ public class DeleteItem extends AppCompatActivity {
             public void onClick(View view) {
 
                 Log.d(TAG, "onClick: Made it to the delete single " + extras.getInt("itemId"));
-                items.remove(extras.getInt("itemId"));
+                item.Id = -5;
 
                 Log.d(TAG, "onClick: This item has been removed" + item.Name + extras.getInt("itemId"));
                 WriteToTextFile();
+
+                Intent intent = new Intent(DeleteItem.this, MasterList.class);
+                startActivity(intent);
+
             }
         });
 
@@ -80,19 +85,10 @@ public class DeleteItem extends AppCompatActivity {
                 }
 
                 WriteToTextFile();
-            }
-        });
 
+                Intent intent = new Intent(DeleteItem.this, MasterList.class);
+                startActivity(intent);
 
-        Button btnDeleteAll = findViewById(R.id.btnDeleteAll);
-        btnDeleteAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                items.clear();
-
-                Log.d(TAG, "onClick: Items have been removed" );
-                WriteToTextFile();
             }
         });
 
@@ -126,6 +122,37 @@ public class DeleteItem extends AppCompatActivity {
         TextView textView = findViewById(R.id.tvItem);
         textView.setText(item.Name);
 
+    }
+
+
+    private void ReadFromTextFile() {
+
+        FileIO fileIO = new FileIO();
+
+        Integer counter = 0;
+        String[] data ;//= new String [items.size()];
+        //for(Item t : items) data[counter++] = t.toString();
+
+        //fileIO.writeFile(this, data);
+
+
+        //Read the data out of the file
+        ArrayList<String> strData = fileIO.readFile(this);
+        items = new ArrayList<Item>();
+
+        for(String s : strData)
+        {
+            data = s.split("\\|");
+            items.add(new Item(Integer.parseInt(data[0]),data[1],Boolean.parseBoolean(data[2])));
+        }
+    }
+
+    private void WriteToTextFile() {
+        FileIO fileIO = new FileIO();
+        Integer counter = 0;
+        String[] data = new String [items.size()];
+        for (Item t : items) data[counter++] = t.toString();
+        fileIO.writeFile(this,data);
     }
 
     @Override
@@ -171,36 +198,5 @@ public class DeleteItem extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    private void ReadFromTextFile() {
-
-        FileIO fileIO = new FileIO();
-
-        Integer counter = 0;
-        String[] data ;//= new String [items.size()];
-        //for(Item t : items) data[counter++] = t.toString();
-
-        //fileIO.writeFile(this, data);
-
-
-        //Read the data out of the file
-        ArrayList<String> strData = fileIO.readFile(this);
-        items = new ArrayList<Item>();
-
-        for(String s : strData)
-        {
-            data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Boolean.parseBoolean(data[2])));
-        }
-    }
-
-    private void WriteToTextFile() {
-        FileIO fileIO = new FileIO();
-        Integer counter = 0;
-        String[] data = new String [items.size()];
-        for (Item t : items) data[counter++] = t.toString();
-        fileIO.writeFile(this,data);
-    }
-
 
 }

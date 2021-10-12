@@ -33,5 +33,6 @@ public class Item {
         Name = name;
     }
     public void setCheckedState(Boolean checkedState) {CheckedState = checkedState;}
+    public void setId(int id){Id = id;}
 
 }

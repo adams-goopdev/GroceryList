@@ -77,8 +77,8 @@ public class ItemAdapter extends RecyclerView.Adapter {
         ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
         Item item = itemData.get(position);
 
-        itemViewHolder.getTextViewName().setText(item.Name);
-        itemViewHolder.getCheckBoxAdd().setChecked(item.CheckedState);
+            itemViewHolder.getTextViewName().setText(item.Name);
+            itemViewHolder.getCheckBoxAdd().setChecked(item.CheckedState);
 
 
         Log.d(TAG, "onBindViewHolder: " + item.Name);

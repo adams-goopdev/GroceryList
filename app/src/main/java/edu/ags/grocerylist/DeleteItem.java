@@ -20,7 +20,8 @@ public class DeleteItem extends AppCompatActivity {
     public static final String TAG = "myDebug";
     Item item;
     ArrayList<Item> items;
-
+    EditText etItem;
+    String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,18 +72,17 @@ public class DeleteItem extends AppCompatActivity {
             }
         });
 
-        Button btnChangeStatus = findViewById(R.id.btnChangeStatus);
-        btnChangeStatus.setOnClickListener(new View.OnClickListener() {
+        Button btnSave = findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(item.CheckedState == true)
-                {
-                    initUncheck();
-                }
-                else if(item.CheckedState == false)
-                {
-                    initCheck();
-                }
+
+                etItem = findViewById(R.id.etItem);
+
+                name = etItem.getText().toString();
+
+                item.setName(name);
+
 
                 WriteToTextFile();
 
@@ -91,7 +91,6 @@ public class DeleteItem extends AppCompatActivity {
 
             }
         });
-
 
     }
 
@@ -119,7 +118,7 @@ public class DeleteItem extends AppCompatActivity {
 
         Log.d(TAG, "initItem: " + item.Name + itemId);
 
-        TextView textView = findViewById(R.id.tvItem);
+        TextView textView = findViewById(R.id.etItem);
         textView.setText(item.Name);
 
     }

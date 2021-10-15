@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
             super(itemView);
             textViewName = itemView.findViewById(R.id.txtName);
             checkBoxAdd = itemView.findViewById(R.id.cbML);
+
             Log.d(TAG, "ItemViewHolder: ");
 
             itemView.setTag(this);
@@ -44,7 +46,6 @@ public class ItemAdapter extends RecyclerView.Adapter {
         public TextView getTextViewName() {
             return textViewName;
         }
-
         public CheckBox getCheckBoxAdd() {
             return checkBoxAdd;
         }
@@ -55,7 +56,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
     public ItemAdapter(ArrayList<Item> arrayList, Context context) {
         itemData = arrayList;
         parentContext = context;
-        Log.d(TAG, "ItemAdapter: " + arrayList.size());
+        Log.d(TAG, "ItemAdapter: " + arrayList.size() + context);
     }
 
     public void setOnClickListener(View.OnClickListener itemClickListener) {
@@ -67,7 +68,9 @@ public class ItemAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        Log.d(TAG, "onCreateViewHolder: " + parent.getContext());
         return new ItemViewHolder(view);
     }
 
@@ -80,8 +83,25 @@ public class ItemAdapter extends RecyclerView.Adapter {
             itemViewHolder.getTextViewName().setText(item.Name);
             itemViewHolder.getCheckBoxAdd().setChecked(item.CheckedState);
 
+            //Log.d(TAG, "onBindViewHolder: " + item.Name);
 
-        Log.d(TAG, "onBindViewHolder: " + item.Name);
+        itemViewHolder.getCheckBoxAdd().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.d(TAG, "onCheckedChanged: Checkbox is checked" + item.getId());
+                item.setCheckedState(b);
+                WriteToTextFile();
+
+            }
+        });
+    }
+
+    private void WriteToTextFile() {
+        FileIO fileIO = new FileIO();
+        Integer counter = 0;
+        String[] data = new String [itemData.size()];
+        for (Item t : itemData) data[counter++] = t.toString();
+        fileIO.writeFile((AppCompatActivity) parentContext,data);
     }
 
     @Override

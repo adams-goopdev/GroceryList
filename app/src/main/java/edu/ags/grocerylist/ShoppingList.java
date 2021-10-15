@@ -25,6 +25,7 @@ public class ShoppingList extends AppCompatActivity {
 
     ItemAdapterSL itemAdapter;
     RecyclerView itemList;
+    CheckBox checkBox;
 
 
 
@@ -36,12 +37,15 @@ public class ShoppingList extends AppCompatActivity {
         this.setTitle("Today's Shopping List");
 
         ReadFromTextFile();
+
+
+
+
     }
 
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         try
         {
             super.onResume();
@@ -49,16 +53,16 @@ public class ShoppingList extends AppCompatActivity {
 
             itemList = findViewById(R.id.rvShoppingItems);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-            itemList.setLayoutManager(layoutManager);
 
+            itemList.setLayoutManager(layoutManager);
             itemAdapter = new ItemAdapterSL(items, this);
             itemList.setAdapter(itemAdapter);
-
 
 
             for (Item t: items)
             {
                 Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
+
             }
 
         }

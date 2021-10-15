@@ -46,7 +46,7 @@ public class MasterList extends AppCompatActivity {
 
 
      ReadFromTextFile();
-       //WriteToTextFile();
+     WriteToTextFile();
 
         this.setTitle("Master List");
 

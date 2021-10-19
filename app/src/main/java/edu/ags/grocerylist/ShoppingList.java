@@ -36,7 +36,19 @@ public class ShoppingList extends AppCompatActivity {
 
         this.setTitle("Today's Shopping List");
 
-        ReadFromTextFile();
+
+
+        ItemDataSource ds = new ItemDataSource(this);
+        try
+        {
+            ds.open();
+            items = ds.getSLItems();
+            Log.d(TAG, "onCreate: Database is open");
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "onCreate: Open DB error" + e.getMessage());
+        }
 
 
 
@@ -49,6 +61,19 @@ public class ShoppingList extends AppCompatActivity {
         try
         {
             super.onResume();
+
+            ItemDataSource ds = new ItemDataSource(this);
+            try
+            {
+                ds.open();
+                items = ds.getSLItems();
+                Log.d(TAG, "onResume: Database is open");
+            }
+            catch (Exception e)
+            {
+                Log.d(TAG, "onResume: Open DB error" + e.getMessage());
+            }
+
 
 
             itemList = findViewById(R.id.rvShoppingItems);
@@ -94,7 +119,7 @@ public class ShoppingList extends AppCompatActivity {
 
                 if (Boolean.parseBoolean(data[2]) == true)
                     if (Integer.parseInt(data[0]) != -5) {
-                        items.add(new Item(Integer.parseInt(data[0]), data[1], Boolean.parseBoolean(data[2])));
+                        items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2])));
                     }
 
             }

@@ -62,7 +62,8 @@ public class AddItem extends AppCompatActivity {
                             item.setId(0);
                             Log.d(TAG, "onClick: Adding first item" );
                             item.setName(editText.getText().toString());
-                            item.CheckedState = checkBox.isChecked();
+                           if(item.CheckedState == 1)
+                            checkBox.isChecked();
 
                             items.add(item);
                         }
@@ -72,7 +73,8 @@ public class AddItem extends AppCompatActivity {
                             item.Id = items.get(items.size() -1 ).Id + 1;
                             Log.d(TAG, "onClick: before get text" );
                             item.setName(editText.getText().toString());
-                            item.CheckedState = checkBox.isChecked();
+                            if(item.CheckedState == 1)
+                                checkBox.isChecked();
 
                             items.add(item);
                             Log.d(TAG, "onClick: adding new item" + item.Name);
@@ -117,7 +119,7 @@ public class AddItem extends AppCompatActivity {
         for(String s : strData)
         {
             data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Boolean.parseBoolean(data[2])));
+            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2])));
         }
     }
 

@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MasterList extends AppCompatActivity {
 
@@ -40,13 +41,19 @@ public class MasterList extends AppCompatActivity {
 
 
 
-/*      items.add(new Item(1,"Bubbly",true));
+     /*  items.add(new Item(1,"Bubbly",true));
         items.add(new Item(2,"Eggs",false));
         items.add(new Item(3,"Yogurt",true));*/
 
 
-     ReadFromTextFile();
-     WriteToTextFile();
+    // ReadFromTextFile();
+     //WriteToTextFile();
+
+       /* for(Item item: items)
+        {
+            SaveToDatabase(item);
+        }*/
+
 
         this.setTitle("Master List");
 
@@ -63,10 +70,11 @@ public class MasterList extends AppCompatActivity {
                     try {
 
                         Log.d(TAG, "onClick: Uncheck this item" + t.Name +" "+ t.CheckedState );
-                        t.setCheckedState(false);
-                        //Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
-                        WriteToTextFile();
+                        t.setCheckedState(0);
 
+
+                        //Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
+                        //WriteToTextFile();
 
                     }
                     catch (Exception e)
@@ -92,7 +100,7 @@ public class MasterList extends AppCompatActivity {
                 items.clear();
 
                 Log.d(TAG, "onClick: Items have been removed" );
-                WriteToTextFile();
+                //WriteToTextFile();
 
                 finish();
                 startActivity(getIntent());
@@ -102,6 +110,19 @@ public class MasterList extends AppCompatActivity {
 
     }
 
+    private void SaveToDatabase(Item item) {
+        ItemDataSource ds = new ItemDataSource(MasterList.this);
+
+        try {
+            ds.open();
+            boolean result = ds.insert(item);
+            Log.d(TAG, "SaveToDatabase: Saved " + item);
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "SaveToDatabase: Error" + e.getMessage());
+        }
+    }
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -141,7 +162,7 @@ public class MasterList extends AppCompatActivity {
 
             if (Integer.parseInt(data[0]) != -5) {
 
-                items.add(new Item(Integer.parseInt(data[0]), data[1], Boolean.parseBoolean(data[2])));
+                items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2])));
             }
 
         }
@@ -162,6 +183,19 @@ public class MasterList extends AppCompatActivity {
         try
         {
             super.onResume();
+
+            ItemDataSource ds = new ItemDataSource(this);
+            try
+            {
+             ds.open();
+             items = ds.getItems();
+                Log.d(TAG, "onResume: Database is open");
+            }
+            catch (Exception e)
+            {
+                Log.d(TAG, "onResume: Open DB error" + e.getMessage());
+            }
+
 
             itemList = findViewById(R.id.rvItems);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

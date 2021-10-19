@@ -3,10 +3,10 @@ package edu.ags.grocerylist;
 public class Item {
 
     public String Name;
-    public boolean CheckedState;
+    public int CheckedState;
     public int Id;
 
-    public Item(int id , String name, boolean checkedState)
+    public Item(int id , String name, int checkedState)
     {
         Id = id;
         Name = name;
@@ -23,7 +23,8 @@ public class Item {
     {
         return Id;
     }
-
+    public String getName(){return Name;}
+    public int getCheckedState(){return CheckedState;}
     public Item()
     {
         Id = -1;
@@ -32,7 +33,7 @@ public class Item {
     {
         Name = name;
     }
-    public void setCheckedState(Boolean checkedState) {CheckedState = checkedState;}
+    public void setCheckedState(int checkedState) {CheckedState = checkedState;}
     public void setId(int id){Id = id;}
 
 }

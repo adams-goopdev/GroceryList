@@ -62,8 +62,8 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
         ItemViewHolderSL itemViewHolder = (ItemViewHolderSL) holder;
         Item item = itemData.get(position);
 
+    if (item.CheckedState == 1)
         itemViewHolder.getTextViewName().setText(item.Name);
-
 
         Log.d(TAG, "onBindViewHolder: " + item.Name);
     }

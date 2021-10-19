@@ -81,7 +81,9 @@ public class ItemAdapter extends RecyclerView.Adapter {
         Item item = itemData.get(position);
 
             itemViewHolder.getTextViewName().setText(item.Name);
-            itemViewHolder.getCheckBoxAdd().setChecked(item.CheckedState);
+
+            if(item.CheckedState == 1)
+            itemViewHolder.getCheckBoxAdd().setChecked(true);
 
             //Log.d(TAG, "onBindViewHolder: " + item.Name);
 
@@ -89,7 +91,12 @@ public class ItemAdapter extends RecyclerView.Adapter {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 Log.d(TAG, "onCheckedChanged: Checkbox is checked" + item.getId());
-                item.setCheckedState(b);
+
+                if (b = true)
+                    item.setCheckedState(1);
+                else
+                    item.setCheckedState(0);
+
                 WriteToTextFile();
 
             }

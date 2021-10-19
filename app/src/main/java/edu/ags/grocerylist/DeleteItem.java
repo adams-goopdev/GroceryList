@@ -97,7 +97,7 @@ public class DeleteItem extends AppCompatActivity {
     private void initCheck() {
         for (Item t: items)
         {
-            item.CheckedState = true;
+            item.CheckedState = 1;
             Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
 
         }
@@ -107,7 +107,7 @@ public class DeleteItem extends AppCompatActivity {
 
         for (Item t: items)
         {
-            item.CheckedState = false;
+            item.CheckedState = 0;
             Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
 
         }
@@ -142,7 +142,7 @@ public class DeleteItem extends AppCompatActivity {
         for(String s : strData)
         {
             data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Boolean.parseBoolean(data[2])));
+            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2])));
         }
     }
 

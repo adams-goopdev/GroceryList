@@ -41,15 +41,17 @@ public class MasterList extends AppCompatActivity {
 
 
 
-     /*  items.add(new Item(1,"Bubbly",true));
-        items.add(new Item(2,"Eggs",false));
-        items.add(new Item(3,"Yogurt",true));*/
+/*
+      items.add(new Item(1,"Bubbly",1,0));
+        items.add(new Item(2,"Eggs",0,0));
+        items.add(new Item(3,"Yogurt",1,0));
+*/
 
 
     // ReadFromTextFile();
      //WriteToTextFile();
 
-       /* for(Item item: items)
+/*        for(Item item: items)
         {
             SaveToDatabase(item);
         }*/
@@ -61,7 +63,7 @@ public class MasterList extends AppCompatActivity {
         btnUncheckAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ItemDataSource ds = new ItemDataSource(MasterList.this);
 
                 for (Item t: items)
                 {
@@ -72,6 +74,8 @@ public class MasterList extends AppCompatActivity {
                         Log.d(TAG, "onClick: Uncheck this item" + t.Name +" "+ t.CheckedState );
                         t.setCheckedState(0);
 
+                        ds.open();
+                        boolean result = ds.update(t);
 
                         //Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
                         //WriteToTextFile();
@@ -131,7 +135,7 @@ public class MasterList extends AppCompatActivity {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
             int itemID = items.get(position).getId();
-            Log.d(TAG, "onClick: asdfasdfasdfasdfasddfasdf" + items.get(position).Name + itemID + " " + position);
+            Log.d(TAG, "onClick: " + items.get(position).Name + itemID + " " + position);
 
             Intent intent = new Intent(MasterList.this, DeleteItem.class);
             intent.putExtra("itemId", itemID);
@@ -162,7 +166,7 @@ public class MasterList extends AppCompatActivity {
 
             if (Integer.parseInt(data[0]) != -5) {
 
-                items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2])));
+                items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]),Integer.parseInt(data[3])));
             }
 
         }
@@ -176,7 +180,7 @@ public class MasterList extends AppCompatActivity {
         fileIO.writeFile(this,data);
     }
 
-    
+
 
     @Override
     public void onResume() {
@@ -208,7 +212,7 @@ public class MasterList extends AppCompatActivity {
 
             for (Item t: items)
             {
-                Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
+                Log.d(TAG, "onResume: Load items" + t.Name +" "+ t.CheckedState);
 
             }
 
@@ -218,7 +222,7 @@ public class MasterList extends AppCompatActivity {
             Log.d(TAG, "onResume: " + e.getMessage());
         }
 
-        ReadFromTextFile();
+        //ReadFromTextFile();
     }
 
     @Override

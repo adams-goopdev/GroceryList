@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class ItemAdapterSL extends RecyclerView.Adapter {
 
-    private static final String TAG = "myItemAdapter";
+    private static final String TAG = "myDebug";
 
     private ArrayList<Item> itemData;
     private Context parentContext;
@@ -24,19 +25,20 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
     public class ItemViewHolderSL extends RecyclerView.ViewHolder {
 
         private TextView textViewName;
-
+        private CheckBox checkBoxCart;
 
         public ItemViewHolderSL(@NonNull View itemView) {
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.txtName);
-
+            checkBoxCart = itemView.findViewById(R.id.cbInCart);
 
             Log.d(TAG, "ItemViewHolder: ");
 
         }
 
         public TextView getTextViewName() { return textViewName; }
+        public CheckBox getCheckBoxCart() { return checkBoxCart; }
 
     }
 
@@ -64,6 +66,25 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
 
     if (item.CheckedState == 1)
         itemViewHolder.getTextViewName().setText(item.Name);
+        if(item.IsInCart == 1)
+        itemViewHolder.getCheckBoxCart().setChecked(true);
+
+        itemViewHolder.getCheckBoxCart().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ItemDataSource ds = new ItemDataSource(parentContext);
+                ds.open();
+
+                if(b == true)
+                item.setIsInCart(1);
+
+                if(b == false)
+                    item.setIsInCart(0);
+                ds.update(item);
+
+            }
+        });
+
 
         Log.d(TAG, "onBindViewHolder: " + item.Name);
     }
@@ -73,6 +94,11 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
 
         return itemData.size();
     }
+
+
+
+
+
 }
 
 

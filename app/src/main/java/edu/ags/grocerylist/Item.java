@@ -5,12 +5,14 @@ public class Item {
     public String Name;
     public int CheckedState;
     public int Id;
+    public int IsInCart;
 
-    public Item(int id , String name, int checkedState)
+    public Item(int id , String name, int checkedState, int isInCart)
     {
         Id = id;
         Name = name;
         CheckedState = checkedState;
+        IsInCart = isInCart;
     }
 
     public String toString()
@@ -35,5 +37,7 @@ public class Item {
     }
     public void setCheckedState(int checkedState) {CheckedState = checkedState;}
     public void setId(int id){Id = id;}
+    public void setIsInCart(int isInCart){IsInCart = isInCart;}
+    public int getIsInCart(){return IsInCart;}
 
 }

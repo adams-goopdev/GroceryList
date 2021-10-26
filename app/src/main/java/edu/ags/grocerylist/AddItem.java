@@ -34,7 +34,12 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         this.setTitle("Add Item");
-        ReadFromTextFile();
+        //ReadFromTextFile();
+
+        ItemDataSource ds = new ItemDataSource(this);
+        ds.open();
+        items = ds.getItems();
+
 
         initAddItem();
         Log.d(TAG, "onCreate: End of Oncreate " );
@@ -45,6 +50,10 @@ public class AddItem extends AppCompatActivity {
         Button btnAddItem = findViewById(R.id.btnAddItem);
         EditText editText = findViewById(R.id.etAddItem);
         CheckBox checkBox = findViewById(R.id.cbAddItem);
+
+        ItemDataSource ds = new ItemDataSource(this);
+        ds.open();
+
 
         Log.d(TAG, "initAddItem: Did I make it here 1 ");
         btnAddItem.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +73,6 @@ public class AddItem extends AppCompatActivity {
                             item.setName(editText.getText().toString());
                            if(item.CheckedState == 1)
                             checkBox.isChecked();
-
                             items.add(item);
                         }
                         else if(items.size() !=0)
@@ -77,6 +85,7 @@ public class AddItem extends AppCompatActivity {
                                 checkBox.isChecked();
 
                             items.add(item);
+
                             Log.d(TAG, "onClick: adding new item" + item.Name);
 
                         }
@@ -84,7 +93,8 @@ public class AddItem extends AppCompatActivity {
                         editText.setText("");
                         checkBox.setChecked(false);
                     }
-                    WriteToTextFile();
+                   // WriteToTextFile();
+                    ds.insert(item);
                     Log.d(TAG, "onClick: Added new item to file");
                 }
                 catch (Exception e)
@@ -111,7 +121,6 @@ public class AddItem extends AppCompatActivity {
 
         //fileIO.writeFile(this, data);
 
-
         //Read the data out of the file
         ArrayList<String> strData = fileIO.readFile(this);
         items = new ArrayList<Item>();
@@ -119,7 +128,7 @@ public class AddItem extends AppCompatActivity {
         for(String s : strData)
         {
             data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2])));
+            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2]),Integer.parseInt(data[3])));
         }
     }
 

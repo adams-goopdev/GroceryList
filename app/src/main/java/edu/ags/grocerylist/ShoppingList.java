@@ -75,7 +75,6 @@ public class ShoppingList extends AppCompatActivity {
             }
 
 
-
             itemList = findViewById(R.id.rvShoppingItems);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -119,7 +118,7 @@ public class ShoppingList extends AppCompatActivity {
 
                 if (Boolean.parseBoolean(data[2]) == true)
                     if (Integer.parseInt(data[0]) != -5) {
-                        items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2])));
+                        items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]),Integer.parseInt(data[3])));
                     }
 
             }

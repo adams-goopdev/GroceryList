@@ -32,7 +32,7 @@ public class DeleteItem extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
 
-        ReadFromTextFile();
+       // ReadFromTextFile();
 
         Log.d(TAG, "onCreate: We made it from the delete click");
         try{
@@ -61,10 +61,15 @@ public class DeleteItem extends AppCompatActivity {
             public void onClick(View view) {
 
                 Log.d(TAG, "onClick: Made it to the delete single " + extras.getInt("itemId"));
-                item.Id = -5;
+
+                ItemDataSource ds = new ItemDataSource(DeleteItem.this);
+
+                    ds.open();
+                    ds.delete(item.Id);
 
                 Log.d(TAG, "onClick: This item has been removed" + item.Name + extras.getInt("itemId"));
-                WriteToTextFile();
+                //WriteToTextFile();
+
 
                 Intent intent = new Intent(DeleteItem.this, MasterList.class);
                 startActivity(intent);
@@ -77,6 +82,7 @@ public class DeleteItem extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                ItemDataSource ds = new ItemDataSource(DeleteItem.this);
                 etItem = findViewById(R.id.etItem);
 
                 name = etItem.getText().toString();
@@ -84,7 +90,10 @@ public class DeleteItem extends AppCompatActivity {
                 item.setName(name);
 
 
-                WriteToTextFile();
+
+                ds.open();
+                ds.update(item);
+               // WriteToTextFile();
 
                 Intent intent = new Intent(DeleteItem.this, MasterList.class);
                 startActivity(intent);
@@ -114,7 +123,10 @@ public class DeleteItem extends AppCompatActivity {
     }
 
     private void initItem(int itemId) {
-        item = items.get(itemId);
+
+        ItemDataSource ds = new ItemDataSource(this);
+        ds.open();
+        item = ds.getItem(itemId);
 
         Log.d(TAG, "initItem: " + item.Name + itemId);
 
@@ -142,7 +154,7 @@ public class DeleteItem extends AppCompatActivity {
         for(String s : strData)
         {
             data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2])));
+            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2]),Integer.parseInt(data[3])));
         }
     }
 
@@ -197,5 +209,6 @@ public class DeleteItem extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }

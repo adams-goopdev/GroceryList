@@ -90,14 +90,22 @@ public class ItemAdapter extends RecyclerView.Adapter {
         itemViewHolder.getCheckBoxAdd().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ItemDataSource ds = new ItemDataSource(parentContext);
+               ds.open();
+
                 Log.d(TAG, "onCheckedChanged: Checkbox is checked" + item.getId());
 
-                if (b = true)
+                if (b == true)
                     item.setCheckedState(1);
                 else
                     item.setCheckedState(0);
 
-                WriteToTextFile();
+
+                ds.update(item);
+
+
+
+               //WriteToTextFile();
 
             }
         });
@@ -116,6 +124,30 @@ public class ItemAdapter extends RecyclerView.Adapter {
 
         return itemData.size();
     }
+
+
+    private void deleteItem(int position, int id) {
+        // Remove it from the teamData
+        itemData.remove(position);
+
+        // Write the file.
+        // WriteToTextFile();
+
+        ItemDataSource ds = new ItemDataSource(parentContext);
+        try{
+            ds.open();
+            boolean result = ds.delete(id);
+            Log.d(TAG, "deleteItem: Delete Team: " + id);
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "deleteItem: " + ex.getMessage());
+        }
+        // Rebind
+        notifyDataSetChanged();
+    }
+
+
 }
 
 

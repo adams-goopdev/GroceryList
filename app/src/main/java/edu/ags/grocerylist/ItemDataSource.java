@@ -52,6 +52,7 @@ public class ItemDataSource {
             Long id = (long)item.getId();
 
             updateValues.put("name",item.getName());
+            updateValues.put("isInCart",item.getIsInCart());
             updateValues.put("checkedstate",item.getCheckedState());
 
             Log.d(TAG, "Update line: " + updateValues);
@@ -72,7 +73,9 @@ public class ItemDataSource {
             ContentValues initialValues = new ContentValues();
             //Set the values
             initialValues.put("name",item.getName());
+            initialValues.put("isInCart",item.getIsInCart());
             initialValues.put("checkedstate",item.getCheckedState());
+
 
             Log.d(TAG, "insert: " + initialValues);
             didSucceed = database.insert(ITEM,null, initialValues) > 0;
@@ -96,7 +99,8 @@ public class ItemDataSource {
                 item = new Item();
                 item.setId(cursor.getInt(0));
                 item.setName(cursor.getString(1));
-                item.setCheckedState((cursor.getInt(2)));
+                item.setIsInCart((cursor.getInt(2)));
+                item.setCheckedState((cursor.getInt(3)));
                 items.add(item);
                 cursor.moveToNext();
 
@@ -124,7 +128,8 @@ public class ItemDataSource {
                 item = new Item();
                 item.setId(cursor.getInt(0));
                 item.setName(cursor.getString(1));
-                item.setCheckedState((cursor.getInt(2)));
+                item.setIsInCart((cursor.getInt(2)));
+                item.setCheckedState((cursor.getInt(3)));
                 cursor.close();
             }
         }
@@ -147,7 +152,8 @@ public class ItemDataSource {
                 item = new Item();
                 item.setId(cursor.getInt(0));
                 item.setName(cursor.getString(1));
-                item.setCheckedState((cursor.getInt(2)));
+                item.setIsInCart((cursor.getInt(2)));
+                item.setCheckedState((cursor.getInt(3)));
                 items.add(item);
                 cursor.moveToNext();
 

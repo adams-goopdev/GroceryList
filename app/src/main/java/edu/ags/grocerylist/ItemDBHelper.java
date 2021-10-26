@@ -11,6 +11,7 @@ public class ItemDBHelper extends SQLiteOpenHelper{
     private static final String CREATE_TABLE_ITEM= "CREATE table item "
             + " (id integer primary key autoincrement, "
             + "name text not null,"
+            + "isInCart int,"
             + "checkedstate int); ";
 
     public ItemDBHelper(Context context){

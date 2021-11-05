@@ -26,7 +26,7 @@ public class ShoppingList extends AppCompatActivity {
     ItemAdapterSL itemAdapter;
     RecyclerView itemList;
     CheckBox checkBox;
-
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/bfoote/";
 
 
     @Override
@@ -35,22 +35,6 @@ public class ShoppingList extends AppCompatActivity {
         setContentView(R.layout.activity_shopping_list);
 
         this.setTitle("Today's Shopping List");
-
-
-
-        ItemDataSource ds = new ItemDataSource(this);
-        try
-        {
-            ds.open();
-            items = ds.getSLItems();
-            Log.d(TAG, "onCreate: Database is open");
-        }
-        catch (Exception e)
-        {
-            Log.d(TAG, "onCreate: Open DB error" + e.getMessage());
-        }
-
-
 
 
     }
@@ -62,31 +46,23 @@ public class ShoppingList extends AppCompatActivity {
         {
             super.onResume();
 
-            ItemDataSource ds = new ItemDataSource(this);
-            try
-            {
-                ds.open();
-                items = ds.getSLItems();
-                Log.d(TAG, "onResume: Database is open");
+            try {
+                RestClient.executeGetIsOnListRequest(ShoppingList.VEHICLETRACKERAPI, this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                for(Item t : result)
+                                {
+                                    Log.d(TAG, "onSuccess: " + t.getName());
+                                }
+                                items = result;
+                                RebindList();
+                            }
+                        });
             }
             catch (Exception e)
             {
-                Log.d(TAG, "onResume: Open DB error" + e.getMessage());
-            }
-
-
-            itemList = findViewById(R.id.rvShoppingItems);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-
-            itemList.setLayoutManager(layoutManager);
-            itemAdapter = new ItemAdapterSL(items, this);
-            itemList.setAdapter(itemAdapter);
-
-
-            for (Item t: items)
-            {
-                Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
-
+                Log.d(TAG, "onResume: "+ e.getMessage());
             }
 
         }
@@ -96,6 +72,17 @@ public class ShoppingList extends AppCompatActivity {
         }
 
     }
+
+    private void RebindList() {
+        itemList = findViewById(R.id.rvShoppingItems);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        itemList.setLayoutManager(layoutManager);
+        itemAdapter = new ItemAdapterSL(items, this);
+        itemList.setAdapter(itemAdapter);
+
+    }
+
 
     private void ReadFromTextFile() {
 

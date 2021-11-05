@@ -19,7 +19,8 @@ import java.util.ArrayList;
 public class ItemAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = "myItemAdapter";
-
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/bfoote/";
+    Item item;
     private ArrayList<Item> itemData;
     private Context parentContext;
     private View.OnClickListener onClickListener;
@@ -80,7 +81,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
         ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
         Item item = itemData.get(position);
 
-            itemViewHolder.getTextViewName().setText(item.Name);
+            itemViewHolder.getTextViewName().setText(item.getName());
 
             if(item.CheckedState == 1)
             itemViewHolder.getCheckBoxAdd().setChecked(true);
@@ -90,8 +91,8 @@ public class ItemAdapter extends RecyclerView.Adapter {
         itemViewHolder.getCheckBoxAdd().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                ItemDataSource ds = new ItemDataSource(parentContext);
-               ds.open();
+               // ItemDataSource ds = new ItemDataSource(parentContext);
+              // ds.open();
 
                 Log.d(TAG, "onCheckedChanged: Checkbox is checked" + item.getId());
 
@@ -100,8 +101,9 @@ public class ItemAdapter extends RecyclerView.Adapter {
                 else
                     item.setCheckedState(0);
 
+                saveToAPI(false);
 
-                ds.update(item);
+               // ds.update(item);
 
 
 
@@ -110,6 +112,44 @@ public class ItemAdapter extends RecyclerView.Adapter {
             }
         });
     }
+
+    private void saveToAPI(boolean post) {
+
+        try {
+            if(post)
+            {
+                RestClient.executePostRequest(item,
+                        ItemAdapter.VEHICLETRACKERAPI,
+                        parentContext,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                Log.d(TAG, "onSuccess: Post" + result);
+                            }
+                        });
+            }
+            else
+            {
+                RestClient.executePutRequest(item,
+                        ItemAdapter.VEHICLETRACKERAPI + item.getId(),
+                        parentContext,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                Log.d(TAG, "onSuccess: Put" + result);
+                            }
+                        });
+            }
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "saveToAPI: " + e.getMessage());
+        }
+
+
+    }
+
+
 
     private void WriteToTextFile() {
         FileIO fileIO = new FileIO();

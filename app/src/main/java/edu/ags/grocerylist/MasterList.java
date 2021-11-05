@@ -29,32 +29,14 @@ public class MasterList extends AppCompatActivity {
     RecyclerView itemList;
     TextView textView;
     CheckBox checkBox;
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/bfoote/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_list);
 
-        Log.d(TAG, "onCreate: Before read");
-
         items = new ArrayList<Item>();
-
-
-
-/*
-      items.add(new Item(1,"Bubbly",1,0));
-        items.add(new Item(2,"Eggs",0,0));
-        items.add(new Item(3,"Yogurt",1,0));
-*/
-
-
-    // ReadFromTextFile();
-     //WriteToTextFile();
-
-/*        for(Item item: items)
-        {
-            SaveToDatabase(item);
-        }*/
 
 
         this.setTitle("Master List");
@@ -63,19 +45,19 @@ public class MasterList extends AppCompatActivity {
         btnUncheckAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ItemDataSource ds = new ItemDataSource(MasterList.this);
+               // ItemDataSource ds = new ItemDataSource(MasterList.this);
 
                 for (Item t: items)
                 {
 
-                    Log.d(TAG, "onClick: Did I make it here for the uncheck?1");
                     try {
 
                         Log.d(TAG, "onClick: Uncheck this item" + t.Name +" "+ t.CheckedState );
                         t.setCheckedState(0);
 
-                        ds.open();
-                        boolean result = ds.update(t);
+                        saveToAPI(false);
+                       // ds.open();
+                        //boolean result = ds.update(t);
 
                         //Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
                         //WriteToTextFile();
@@ -113,6 +95,44 @@ public class MasterList extends AppCompatActivity {
 
 
     }
+
+    private void saveToAPI(boolean post) {
+
+        try {
+            if(post)
+            {
+                RestClient.executePostRequest(item,
+                        MasterList.VEHICLETRACKERAPI,
+                        this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                Log.d(TAG, "onSuccess: Post" + result);
+                            }
+                        });
+            }
+            else
+            {
+                RestClient.executePutRequest(item,
+                        MasterList.VEHICLETRACKERAPI + item.getId(),
+                        this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                Log.d(TAG, "onSuccess: Put" + result);
+                            }
+                        });
+            }
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "saveToAPI: " + e.getMessage());
+        }
+
+
+    }
+
+
 
     private void SaveToDatabase(Item item) {
         ItemDataSource ds = new ItemDataSource(MasterList.this);
@@ -188,32 +208,23 @@ public class MasterList extends AppCompatActivity {
         {
             super.onResume();
 
-            ItemDataSource ds = new ItemDataSource(this);
-            try
-            {
-             ds.open();
-             items = ds.getItems();
-                Log.d(TAG, "onResume: Database is open");
+            try {
+                RestClient.executeGetRequest(ShoppingList.VEHICLETRACKERAPI, this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                for(Item t : result)
+                                {
+                                    Log.d(TAG, "onSuccess: " + t.getName());
+                                }
+                                items = result;
+                                RebindList();
+                            }
+                        });
             }
             catch (Exception e)
             {
-                Log.d(TAG, "onResume: Open DB error" + e.getMessage());
-            }
-
-
-            itemList = findViewById(R.id.rvItems);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-            itemList.setLayoutManager(layoutManager);
-
-
-            itemAdapter = new ItemAdapter(items, this);
-            itemAdapter.setOnClickListener(onClickListener);
-            itemList.setAdapter(itemAdapter);
-
-            for (Item t: items)
-            {
-                Log.d(TAG, "onResume: Load items" + t.Name +" "+ t.CheckedState);
-
+                Log.d(TAG, "onResume: "+ e.getMessage());
             }
 
         }
@@ -221,9 +232,17 @@ public class MasterList extends AppCompatActivity {
         {
             Log.d(TAG, "onResume: " + e.getMessage());
         }
-
-        //ReadFromTextFile();
     }
+
+    private void RebindList() {
+        itemList = findViewById(R.id.rvItems);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        itemList.setLayoutManager(layoutManager);
+        itemAdapter = new ItemAdapter(items, this);
+        itemList.setAdapter(itemAdapter);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

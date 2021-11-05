@@ -33,8 +33,6 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
             textViewName = itemView.findViewById(R.id.txtName);
             checkBoxCart = itemView.findViewById(R.id.cbInCart);
 
-            Log.d(TAG, "ItemViewHolder: ");
-
         }
 
         public TextView getTextViewName() { return textViewName; }
@@ -64,29 +62,40 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
         ItemViewHolderSL itemViewHolder = (ItemViewHolderSL) holder;
         Item item = itemData.get(position);
 
-    if (item.CheckedState == 1)
-        itemViewHolder.getTextViewName().setText(item.Name);
-        if(item.IsInCart == 1)
-        itemViewHolder.getCheckBoxCart().setChecked(true);
+
+
+    if (item.CheckedState == 1) {
+        itemViewHolder.getTextViewName().setText(item.getName());
+       // itemViewHolder.checkBoxCart.setVisibility(View.VISIBLE);
+        Log.d(TAG, "onBindViewHolder: " + item.CheckedState);
+        if(item.IsInCart == 1){
+            itemViewHolder.getCheckBoxCart().setChecked(true);
+
+        }
+        else
+        {
+            //itemViewHolder.getTextViewName().setText("");
+           // itemViewHolder.checkBoxCart.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
         itemViewHolder.getCheckBoxCart().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                ItemDataSource ds = new ItemDataSource(parentContext);
-                ds.open();
+               // ItemDataSource ds = new ItemDataSource(parentContext);
+               // ds.open();
 
                 if(b == true)
                 item.setIsInCart(1);
 
                 if(b == false)
                     item.setIsInCart(0);
-                ds.update(item);
+                //ds.update(item);
 
             }
         });
 
-
-        Log.d(TAG, "onBindViewHolder: " + item.Name);
     }
 
     @Override

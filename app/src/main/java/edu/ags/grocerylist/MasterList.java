@@ -28,7 +28,7 @@ public class MasterList extends AppCompatActivity {
     RecyclerView itemList;
     TextView textView;
     CheckBox checkBox;
-    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/bfoote/";
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,68 +40,23 @@ public class MasterList extends AppCompatActivity {
 
         this.setTitle("Master List");
 
-        Button btnUncheckAll = findViewById(R.id.btnUncheckAll);
-        btnUncheckAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               // ItemDataSource ds = new ItemDataSource(MasterList.this);
-
-                for (Item t: items)
-                {
-
-                    try {
-
-                        Log.d(TAG, "onClick: Uncheck this item" + t.Name +" "+ t.CheckedState );
-                        t.setCheckedState(0);
-
-                        saveToAPI(false);
-                       // ds.open();
-                        //boolean result = ds.update(t);
-
-                        //Log.d(TAG, "onResume: " + t.Name +" "+ t.CheckedState);
-                        //WriteToTextFile();
-
-                    }
-                    catch (Exception e)
-                    {
-                        Log.d(TAG, "onClick: This happened" + e.getMessage());
-                    }
-                    finish();
-                    startActivity(getIntent());
-
-                }
-
-
-            }
-
-        });
-
-
-        Button btnDeleteAll = findViewById(R.id.btnDeleteAll);
-        btnDeleteAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                items.clear();
-
-                Log.d(TAG, "onClick: Items have been removed" );
-                //WriteToTextFile();
-
-                finish();
-                startActivity(getIntent());
-            }
-        });
 
 
     }
 
+
+
     private void saveToAPI(boolean post) {
+
+        android.content.SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        String user = preferences.getString("User","") + "/";
 
         try {
             if(post)
             {
                 RestClient.executePostRequest(item,
-                        MasterList.VEHICLETRACKERAPI,
+                        MasterList.VEHICLETRACKERAPI + user,
                         this,
                         new VolleyCallback() {
                             @Override
@@ -113,7 +68,7 @@ public class MasterList extends AppCompatActivity {
             else
             {
                 RestClient.executePutRequest(item,
-                        MasterList.VEHICLETRACKERAPI + item.getId(),
+                        MasterList.VEHICLETRACKERAPI + item.getId() ,
                         this,
                         new VolleyCallback() {
                             @Override
@@ -133,20 +88,6 @@ public class MasterList extends AppCompatActivity {
 
 
 
-    private void SaveToDatabase(Item item) {
-        ItemDataSource ds = new ItemDataSource(MasterList.this);
-
-        try {
-            ds.open();
-            boolean result = ds.insert(item);
-            Log.d(TAG, "SaveToDatabase: Saved " + item);
-        }
-        catch (Exception e)
-        {
-            Log.d(TAG, "SaveToDatabase: Error" + e.getMessage());
-        }
-    }
-
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -163,42 +104,6 @@ public class MasterList extends AppCompatActivity {
             Log.d(TAG, "onClick: Send to delete");
         }
     };
-
-    private void ReadFromTextFile() {
-
-        FileIO fileIO = new FileIO();
-
-        Integer counter = 0;
-        String[] data ;//= new String [items.size()];
-        //for(Item t : items) data[counter++] = t.toString();
-
-        //fileIO.writeFile(this, data);
-
-
-        //Read the data out of the file
-        ArrayList<String> strData = fileIO.readFile(this);
-        items = new ArrayList<Item>();
-
-        for(String s : strData)
-        {
-            data = s.split("\\|");
-
-            if (Integer.parseInt(data[0]) != -5) {
-
-                items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]),Integer.parseInt(data[3])));
-            }
-
-        }
-    }
-
-    private void WriteToTextFile() {
-        FileIO fileIO = new FileIO();
-        Integer counter = 0;
-        String[] data = new String [items.size()];
-        for (Item t : items) data[counter++] = t.toString();
-        fileIO.writeFile(this,data);
-    }
-
 
 
     @Override
@@ -244,6 +149,7 @@ public class MasterList extends AppCompatActivity {
         itemList.setLayoutManager(layoutManager);
         itemAdapter = new ItemAdapter(items, this);
         itemList.setAdapter(itemAdapter);
+
     }
 
 

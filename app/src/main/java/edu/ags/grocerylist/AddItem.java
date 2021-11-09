@@ -26,6 +26,7 @@ public class AddItem extends AppCompatActivity {
     ItemAdapter itemAdapter;
     RecyclerView itemList;
     TextView textView;
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +34,22 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         this.setTitle("Add Item");
-        //ReadFromTextFile();
-
-        ItemDataSource ds = new ItemDataSource(this);
-        ds.open();
-        items = ds.getItems();
-
 
         initAddItem();
-        Log.d(TAG, "onCreate: End of Oncreate " );
+        Log.d(TAG, "onCreate: End of Oncreate ");
     }
 
 
-    private void initAddItem( ) {
+    private void initAddItem() {
         Button btnAddItem = findViewById(R.id.btnAddItem);
         EditText editText = findViewById(R.id.etAddItem);
         CheckBox checkBox = findViewById(R.id.cbAddItem);
 
-        ItemDataSource ds = new ItemDataSource(this);
-        ds.open();
+
+
+        android.content.SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        String user = preferences.getString("User", "");
 
 
         Log.d(TAG, "initAddItem: Did I make it here 1 ");
@@ -62,83 +60,90 @@ public class AddItem extends AppCompatActivity {
 
                 item = new Item();
 
-                try{
-                    if(item.Id == -1)
-                    {
-                        if (items.size() == 0 )
-                        {
-                            item.setId(0);
-                            Log.d(TAG, "onClick: Adding first item" );
-                            item.setName(editText.getText().toString());
-                           if(item.CheckedState == 1)
-                            checkBox.isChecked();
-                            items.add(item);
-                        }
-                        else if(items.size() !=0)
-                        {
-                            Log.d(TAG, "OnClick: not the first item " + items.size());
-                            item.Id = items.get(items.size() -1 ).Id + 1;
-                            Log.d(TAG, "onClick: before get text" );
-                            item.setName(editText.getText().toString());
-                            if(item.CheckedState == 1)
-                                checkBox.isChecked();
-
-                            items.add(item);
-
-                            Log.d(TAG, "onClick: adding new item" + item.Name);
-
-                        }
-
-                        editText.setText("");
-                        checkBox.setChecked(false);
-                    }
-                   // WriteToTextFile();
-                    ds.insert(item);
-                    Log.d(TAG, "onClick: Added new item to file");
-                }
-                catch (Exception e)
+                item.setName(editText.getText().toString());
+                if(checkBox.isChecked())
                 {
-                    Log.d(TAG, "onClick: test " + e.getMessage());
+                    item.setCheckedState(1);
+                }
+                else
+                {
+                    item.setCheckedState(0);
                 }
 
 
+                item.setOwner(user);
+                saveToAPI(true);
+
+                editText.setText("");
+                checkBox.setChecked(false);
+
+                Log.d(TAG, "save new item to API" + item.getOwner() + " " + item.Name);
             }
         });
 
-
-
-
     }
 
-    private void ReadFromTextFile() {
+    private void saveToAPI(boolean post) {
 
-        FileIO fileIO = new FileIO();
-
-        Integer counter = 0;
-        String[] data ;//= new String [items.size()];
-        //for(Item t : items) data[counter++] = t.toString();
-
-        //fileIO.writeFile(this, data);
-
-        //Read the data out of the file
-        ArrayList<String> strData = fileIO.readFile(this);
-        items = new ArrayList<Item>();
-
-        for(String s : strData)
-        {
-            data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2]),Integer.parseInt(data[3])));
+        try {
+            if (post) {
+                RestClient.executePostRequest(item,
+                        VEHICLETRACKERAPI,
+                        this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                Log.d(TAG, "onSuccess: Post" + result);
+                            }
+                        });
+            } else {
+                RestClient.executePutRequest(item,
+                        VEHICLETRACKERAPI + item.getId(),
+                        this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                Log.d(TAG, "onSuccess: Put" + result);
+                            }
+                        });
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "saveToAPI: " + e.getMessage());
         }
+
+
     }
 
+    @Override
+    public void onResume() {
+        try {
+            super.onResume();
+
+            android.content.SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+            String user = preferences.getString("User", "") + "/";
 
 
-    private void WriteToTextFile() {
-        FileIO fileIO = new FileIO();
-        Integer counter = 0;
-        String[] data = new String [items.size()];
-        for (Item t : items) data[counter++] = t.toString();
-        fileIO.writeFile(this,data);
+            try {
+                RestClient.executeGetIsOnListRequest(ShoppingList.VEHICLETRACKERAPI + user, this,
+                        new VolleyCallback() {
+                            @Override
+                            public void onSuccess(ArrayList<Item> result) {
+                                for (Item t : result) {
+                                    Log.d(TAG, "onSuccess: " + VEHICLETRACKERAPI);
+                                    Log.d(TAG, "onSuccess: " + t.getName());
+                                }
+                                items = result;
+                            }
+                        });
+            } catch (Exception e) {
+                Log.d(TAG, "onResume: " + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            Log.d(TAG, "onResume: " + e.getMessage());
+        }
+
     }
 
 
@@ -163,21 +168,15 @@ public class AddItem extends AppCompatActivity {
             startActivity(new Intent(this, MasterList.class));
 
             return true;
-        }
-        else if (id == R.id.ShoppingList)
-        {
+        } else if (id == R.id.ShoppingList) {
             startActivity(new Intent(this, ShoppingList.class));
 
             return true;
-        }
-        else if (id == R.id.AddItem)
-        {
+        } else if (id == R.id.AddItem) {
             startActivity(new Intent(this, AddItem.class));
 
             return true;
-        }
-        else if (id == R.id.SetUser)
-        {
+        } else if (id == R.id.SetUser) {
             startActivity(new Intent(this, SharedPreferences.class));
 
             return true;

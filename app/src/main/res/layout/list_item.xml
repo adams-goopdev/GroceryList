@@ -31,6 +31,14 @@
 
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        tools:layout_editor_absoluteX="123dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintStart_toEndOf="@id/txtName"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

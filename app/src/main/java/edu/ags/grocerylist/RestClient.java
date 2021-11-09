@@ -50,20 +50,21 @@ public class RestClient {
                                     item.setName(object.getString("item"));
                                     item.setCheckedState(object.getInt("isOnShoppingList"));
                                     item.setIsInCart(object.getInt("isInCart"));
+                                    item.setOwner(object.getString("owner"));
 
 
-                                   items.add(item);
+                                    items.add(item);
 
                                 }
                                 volleyCallback.onSuccess(items);
                             } catch (JSONException e) {
-                                Log.d(TAG, "onResponse: " + e.getMessage());
+                                Log.d(TAG, "onResponse: Get Request" + e.getMessage());
                             }
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                    Log.d(TAG, "onErrorResponse: Get Request " + error.getMessage());
                 }
             });
 
@@ -100,9 +101,9 @@ public class RestClient {
                                     item.setName(object.getString("item"));
                                     item.setCheckedState(object.getInt("isOnShoppingList"));
                                     item.setIsInCart(object.getInt("isInCart"));
+                                    item.setOwner(object.getString("owner"));
 
-
-                                    if(item.CheckedState == 1) {
+                                    if (item.CheckedState == 1) {
                                         items.add(item);
                                     }
 
@@ -150,8 +151,8 @@ public class RestClient {
                                 item.setName(object.getString("item"));
                                 item.setCheckedState(object.getInt("isOnShoppingList"));
                                 item.setIsInCart(object.getInt("isInCart"));
-
-                                    items.add(item);
+                                item.setOwner(object.getString("owner"));
+                                items.add(item);
 
 
                                 volleyCallback.onSuccess(items);
@@ -178,6 +179,7 @@ public class RestClient {
     public static void executePostRequest(Item item, String url, Context context, VolleyCallback volleyCallback) {
         try {
             executeRequest(item, url, context, volleyCallback, Request.Method.POST);
+            Log.d(TAG, "executePostRequest: " + item + " " + url + " ");
 
         } catch (Exception e) {
             Log.d(TAG, "executePostRequest: " + e.getMessage());
@@ -188,7 +190,7 @@ public class RestClient {
     public static void executePutRequest(Item item, String url, Context context, VolleyCallback volleyCallback) {
         try {
             executeRequest(item, url, context, volleyCallback, Request.Method.PUT);
-
+            Log.d(TAG, "executePutRequest: " + item + " " + url + " ");
         } catch (Exception e) {
             Log.d(TAG, "executePostRequest: " + e.getMessage());
         }
@@ -200,7 +202,7 @@ public class RestClient {
             executeRequest(item, url, context, volleyCallback, Request.Method.DELETE);
 
         } catch (Exception e) {
-            Log.d(TAG, "executePostRequest: " + e.getMessage());
+            Log.d(TAG, "executeDeleteRequest: " + e.getMessage());
         }
 
     }
@@ -216,10 +218,12 @@ public class RestClient {
             jsonObject.put("item", item.getName());
             jsonObject.put("isInCart", item.getIsInCart());
             jsonObject.put("isOnShoppingList", item.getCheckedState());
-
+            jsonObject.put("owner", item.getOwner());
 
             final String requestBody = jsonObject.toString();
-            Log.d(TAG, "executeRequest: " + requestBody);
+
+
+            Log.d(TAG, "executeRequest: " + item.getId() + " " + requestBody);
 
 
             JsonObjectRequest request = new JsonObjectRequest(method, url, jsonObject,
@@ -243,9 +247,10 @@ public class RestClient {
             };
             //Important line
             queue.add(request);
+            Log.d(TAG, "executeRequest: Done");
 
         } catch (Exception e) {
-            Log.d(TAG, "executeRequest: " + e.getMessage());
+            Log.d(TAG, "executeRequest: ERROR " + e.getMessage());
         }
     }
 

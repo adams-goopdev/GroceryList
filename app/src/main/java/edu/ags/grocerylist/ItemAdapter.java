@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class ItemAdapter extends RecyclerView.Adapter {
 
     private static final String TAG = "myItemAdapter";
-    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/bfoote/";
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/";
     Item item;
     private ArrayList<Item> itemData;
     private Context parentContext;
@@ -30,11 +31,13 @@ public class ItemAdapter extends RecyclerView.Adapter {
 
         private TextView textViewName;
         private CheckBox checkBoxAdd;
+        private Button btnDelete;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.txtName);
             checkBoxAdd = itemView.findViewById(R.id.cbML);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
 
             Log.d(TAG, "ItemViewHolder: ");
 
@@ -50,6 +53,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
         public CheckBox getCheckBoxAdd() {
             return checkBoxAdd;
         }
+        public Button getBtnDelete(){return btnDelete;}
 
     }
 
@@ -91,73 +95,57 @@ public class ItemAdapter extends RecyclerView.Adapter {
         itemViewHolder.getCheckBoxAdd().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               // ItemDataSource ds = new ItemDataSource(parentContext);
-              // ds.open();
 
-                Log.d(TAG, "onCheckedChanged: Checkbox is checked" + item.getId());
+
+                Log.d(TAG, "onCheckedChanged: Checkbox is checked " + item.getId());
 
                 if (b == true)
                     item.setCheckedState(1);
                 else
                     item.setCheckedState(0);
 
-                saveToAPI(false);
+                Log.d(TAG, "onCheckedChanged: Item is " + item.getName() + " " + item.getId() + " " + item.getCheckedState());
 
-               // ds.update(item);
+                Log.d(TAG, "onCheckedChanged: " + parentContext);
 
+                try {
 
+                        RestClient.executePutRequest(item,
+                                VEHICLETRACKERAPI + item.getId(),
+                                parentContext,
+                                new VolleyCallback() {
+                                    @Override
+                                    public void onSuccess(ArrayList<Item> result) {
+                                        Log.d(TAG, "onSuccess: Post" + result);
+                                    }
+                                });
 
-               //WriteToTextFile();
+                } catch (Exception e) {
+                    Log.d(TAG, "saveToAPI: " + e.getMessage());
+                }
 
             }
         });
-    }
 
-    private void saveToAPI(boolean post) {
 
-        try {
-            if(post)
-            {
-                RestClient.executePostRequest(item,
-                        ItemAdapter.VEHICLETRACKERAPI,
-                        parentContext,
-                        new VolleyCallback() {
-                            @Override
-                            public void onSuccess(ArrayList<Item> result) {
-                                Log.d(TAG, "onSuccess: Post" + result);
-                            }
-                        });
+
+        itemViewHolder.getBtnDelete().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                RestClient.executeDeleteRequest(item, VEHICLETRACKERAPI + item.getId(), parentContext, new VolleyCallback() {
+                    @Override
+                    public void onSuccess(ArrayList<Item> result) {
+                        Log.d(TAG, "Delete Items");
+                    }
+                });
             }
-            else
-            {
-                RestClient.executePutRequest(item,
-                        ItemAdapter.VEHICLETRACKERAPI + item.getId(),
-                        parentContext,
-                        new VolleyCallback() {
-                            @Override
-                            public void onSuccess(ArrayList<Item> result) {
-                                Log.d(TAG, "onSuccess: Put" + result);
-                            }
-                        });
-            }
-        }
-        catch (Exception e)
-        {
-            Log.d(TAG, "saveToAPI: " + e.getMessage());
-        }
+        });
+
 
 
     }
 
-
-
-    private void WriteToTextFile() {
-        FileIO fileIO = new FileIO();
-        Integer counter = 0;
-        String[] data = new String [itemData.size()];
-        for (Item t : itemData) data[counter++] = t.toString();
-        fileIO.writeFile((AppCompatActivity) parentContext,data);
-    }
 
     @Override
     public int getItemCount() {
@@ -166,26 +154,6 @@ public class ItemAdapter extends RecyclerView.Adapter {
     }
 
 
-    private void deleteItem(int position, int id) {
-        // Remove it from the teamData
-        itemData.remove(position);
-
-        // Write the file.
-        // WriteToTextFile();
-
-        ItemDataSource ds = new ItemDataSource(parentContext);
-        try{
-            ds.open();
-            boolean result = ds.delete(id);
-            Log.d(TAG, "deleteItem: Delete Team: " + id);
-        }
-        catch(Exception ex)
-        {
-            Log.d(TAG, "deleteItem: " + ex.getMessage());
-        }
-        // Rebind
-        notifyDataSetChanged();
-    }
 
 
 }

@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="240dp"
 
-        android:text="@string/add_item_to_master"
+        android:text="Add Item to Shopping List?"
         app:layout_constraintTop_toBottomOf="@id/etAddItem"
         app:layout_constraintBottom_toTopOf="@id/btnAddItem"
         tools:layout_editor_absoluteY="64dp" />

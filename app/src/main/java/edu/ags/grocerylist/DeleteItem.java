@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class DeleteItem extends AppCompatActivity {
     public static final String TAG = "myDebug";
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/";
     Item item;
     ArrayList<Item> items;
     EditText etItem;
@@ -32,7 +33,9 @@ public class DeleteItem extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
 
-       // ReadFromTextFile();
+
+
+        // ReadFromTextFile();
 
         Log.d(TAG, "onCreate: We made it from the delete click");
         try{
@@ -62,13 +65,11 @@ public class DeleteItem extends AppCompatActivity {
 
                 Log.d(TAG, "onClick: Made it to the delete single " + extras.getInt("itemId"));
 
-                ItemDataSource ds = new ItemDataSource(DeleteItem.this);
 
-                    ds.open();
-                    ds.delete(item.Id);
+                deleteItem();
 
                 Log.d(TAG, "onClick: This item has been removed" + item.Name + extras.getInt("itemId"));
-                //WriteToTextFile();
+
 
 
                 Intent intent = new Intent(DeleteItem.this, MasterList.class);
@@ -98,6 +99,22 @@ public class DeleteItem extends AppCompatActivity {
                 Intent intent = new Intent(DeleteItem.this, MasterList.class);
                 startActivity(intent);
 
+            }
+        });
+
+    }
+
+    private void deleteItem() {
+
+        android.content.SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        String user = preferences.getString("User","") + "/";
+
+
+        RestClient.executeDeleteRequest(item, VEHICLETRACKERAPI + user, this, new VolleyCallback() {
+            @Override
+            public void onSuccess(ArrayList<Item> result) {
+                Log.d(TAG, "onSuccess: Delete");
             }
         });
 
@@ -136,35 +153,6 @@ public class DeleteItem extends AppCompatActivity {
     }
 
 
-    private void ReadFromTextFile() {
-
-        FileIO fileIO = new FileIO();
-
-        Integer counter = 0;
-        String[] data ;//= new String [items.size()];
-        //for(Item t : items) data[counter++] = t.toString();
-
-        //fileIO.writeFile(this, data);
-
-
-        //Read the data out of the file
-        ArrayList<String> strData = fileIO.readFile(this);
-        items = new ArrayList<Item>();
-
-        for(String s : strData)
-        {
-            data = s.split("\\|");
-            items.add(new Item(Integer.parseInt(data[0]),data[1],Integer.parseInt(data[2]),Integer.parseInt(data[3])));
-        }
-    }
-
-    private void WriteToTextFile() {
-        FileIO fileIO = new FileIO();
-        Integer counter = 0;
-        String[] data = new String [items.size()];
-        for (Item t : items) data[counter++] = t.toString();
-        fileIO.writeFile(this,data);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

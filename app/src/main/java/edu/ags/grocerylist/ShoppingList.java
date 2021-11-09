@@ -90,42 +90,6 @@ public class ShoppingList extends AppCompatActivity {
 
     }
 
-
-    private void ReadFromTextFile() {
-
-        FileIO fileIO = new FileIO();
-
-        Integer counter = 0;
-        String[] data ;//= new String [items.size()];
-        //for(Item t : items) data[counter++] = t.toString();
-
-
-
-        //Read the data out of the file
-        ArrayList<String> strData = fileIO.readFile(this);
-        items = new ArrayList<Item>();
-
-        try{
-            for(String s : strData)
-            {
-                data = s.split("\\|");
-
-                if (Boolean.parseBoolean(data[2]) == true)
-                    if (Integer.parseInt(data[0]) != -5) {
-                        items.add(new Item(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]),Integer.parseInt(data[3])));
-                    }
-
-            }
-        }
-   catch (Exception e)
-   {
-       Log.d(TAG, "ReadFromTextFile: load all beside -5" + e.getMessage());
-   }
-
-
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

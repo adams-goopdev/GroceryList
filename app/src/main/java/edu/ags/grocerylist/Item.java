@@ -6,13 +6,15 @@ public class Item {
     public int CheckedState;
     public int Id;
     public int IsInCart;
+    public String Owner;
 
-    public Item(int id , String name, int checkedState, int isInCart)
+    public Item(int id , String name, int checkedState, int isInCart, String owner)
     {
         Id = id;
         Name = name;
         CheckedState = checkedState;
         IsInCart = isInCart;
+        Owner = owner;
     }
 
     public String toString()
@@ -39,5 +41,7 @@ public class Item {
     public void setId(int id){Id = id;}
     public void setIsInCart(int isInCart){IsInCart = isInCart;}
     public int getIsInCart(){return IsInCart;}
+    public String getOwner(){return Owner;}
+    public void setOwner(String owner){Owner = owner;}
 
 }

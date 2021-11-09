@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class ItemAdapterSL extends RecyclerView.Adapter {
 
     private static final String TAG = "myDebug";
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/";
 
     private ArrayList<Item> itemData;
     private Context parentContext;
@@ -83,15 +84,30 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
         itemViewHolder.getCheckBoxCart().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               // ItemDataSource ds = new ItemDataSource(parentContext);
-               // ds.open();
+
 
                 if(b == true)
                 item.setIsInCart(1);
 
                 if(b == false)
                     item.setIsInCart(0);
-                //ds.update(item);
+
+                try {
+
+                    RestClient.executePutRequest(item,
+                            VEHICLETRACKERAPI + item.getId(),
+                            parentContext,
+                            new VolleyCallback() {
+                                @Override
+                                public void onSuccess(ArrayList<Item> result) {
+                                    Log.d(TAG, "onSuccess: Post" + result);
+                                }
+                            });
+
+                } catch (Exception e) {
+                    Log.d(TAG, "saveToAPI: " + e.getMessage());
+                }
+
 
             }
         });

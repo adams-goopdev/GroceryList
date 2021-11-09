@@ -26,6 +26,8 @@ public class SharedPreferences extends AppCompatActivity {
         Button btnUserPref = findViewById(R.id.btnUserPref);
         EditText etUser = findViewById(R.id.etUser);
 
+
+
         btnUserPref.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -174,6 +173,12 @@ public class AddItem extends AppCompatActivity {
         else if (id == R.id.AddItem)
         {
             startActivity(new Intent(this, AddItem.class));
+
+            return true;
+        }
+        else if (id == R.id.SetUser)
+        {
+            startActivity(new Intent(this, SharedPreferences.class));
 
             return true;
         }

@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -208,8 +207,12 @@ public class MasterList extends AppCompatActivity {
         {
             super.onResume();
 
+            android.content.SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+            String user = preferences.getString("User","") + "/";
+
             try {
-                RestClient.executeGetRequest(ShoppingList.VEHICLETRACKERAPI, this,
+                RestClient.executeGetRequest(ShoppingList.VEHICLETRACKERAPI + user, this,
                         new VolleyCallback() {
                             @Override
                             public void onSuccess(ArrayList<Item> result) {
@@ -275,6 +278,12 @@ public class MasterList extends AppCompatActivity {
         else if (id == R.id.AddItem)
         {
             startActivity(new Intent(this, AddItem.class));
+
+            return true;
+        }
+        else if (id == R.id.SetUser)
+        {
+            startActivity(new Intent(this, SharedPreferences.class));
 
             return true;
         }

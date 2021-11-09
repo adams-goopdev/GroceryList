@@ -11,4 +11,9 @@
         android:name="edu.ags.grocerylist.ShoppingList"
         android:label="activity_shopping_list"
         tools:layout="@layout/activity_shopping_list" />
+    <activity
+        android:id="@+id/sharedPreferences"
+        android:name="edu.ags.grocerylist.SharedPreferences"
+        android:label="activity_shared_preferences"
+        tools:layout="@layout/activity_shared_preferences" />
 </navigation>

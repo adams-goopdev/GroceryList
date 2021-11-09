@@ -26,8 +26,8 @@ public class ShoppingList extends AppCompatActivity {
     ItemAdapterSL itemAdapter;
     RecyclerView itemList;
     CheckBox checkBox;
-    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/bfoote/";
 
+    public static final String VEHICLETRACKERAPI = "https://vehicletrackerapi.azurewebsites.net/api/GroceryList/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,7 @@ public class ShoppingList extends AppCompatActivity {
 
         this.setTitle("Today's Shopping List");
 
+        Log.d(TAG, "onCreate: " + VEHICLETRACKERAPI);
 
     }
 
@@ -46,13 +47,19 @@ public class ShoppingList extends AppCompatActivity {
         {
             super.onResume();
 
+            SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+            String user = preferences.getString("User","") + "/";
+
+
             try {
-                RestClient.executeGetIsOnListRequest(ShoppingList.VEHICLETRACKERAPI, this,
+                RestClient.executeGetIsOnListRequest(ShoppingList.VEHICLETRACKERAPI + user, this,
                         new VolleyCallback() {
                             @Override
                             public void onSuccess(ArrayList<Item> result) {
                                 for(Item t : result)
                                 {
+                                    Log.d(TAG, "onSuccess: " + VEHICLETRACKERAPI);
                                     Log.d(TAG, "onSuccess: " + t.getName());
                                 }
                                 items = result;
@@ -150,6 +157,12 @@ public class ShoppingList extends AppCompatActivity {
         else if (id == R.id.AddItem)
         {
             startActivity(new Intent(this, AddItem.class));
+
+            return true;
+        }
+        else if (id == R.id.SetUser)
+        {
+            startActivity(new Intent(this, edu.ags.grocerylist.SharedPreferences.class));
 
             return true;
         }

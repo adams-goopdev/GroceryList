@@ -1,6 +1,9 @@
 package edu.ags.grocerylist;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,7 +109,6 @@ public class ItemAdapter extends RecyclerView.Adapter {
 
                 Log.d(TAG, "onCheckedChanged: Item is " + item.getName() + " " + item.getId() + " " + item.getCheckedState());
 
-                Log.d(TAG, "onCheckedChanged: " + parentContext);
 
                 try {
 
@@ -128,18 +130,30 @@ public class ItemAdapter extends RecyclerView.Adapter {
         });
 
 
-
         itemViewHolder.getBtnDelete().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                android.content.SharedPreferences preferences = parentContext.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+                String user = preferences.getString("User","") + "/";
+
+
                 RestClient.executeDeleteRequest(item, VEHICLETRACKERAPI + item.getId(), parentContext, new VolleyCallback() {
                     @Override
                     public void onSuccess(ArrayList<Item> result) {
+
                         Log.d(TAG, "Delete Items");
                     }
                 });
+
+                itemData.remove(position);
+                notifyDataSetChanged();
             }
+
+
+
+
         });
 
 

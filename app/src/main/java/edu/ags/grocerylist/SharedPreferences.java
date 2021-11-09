@@ -26,6 +26,13 @@ public class SharedPreferences extends AppCompatActivity {
         Button btnUserPref = findViewById(R.id.btnUserPref);
         EditText etUser = findViewById(R.id.etUser);
 
+        String user = preferences.getString("User", "");
+
+        if(preferences.getString("User", "").length() > 0)
+        {
+            Intent intent = new Intent(SharedPreferences.this, ShoppingList.class);
+            startActivity(intent);
+        }
 
 
         btnUserPref.setOnClickListener(new View.OnClickListener() {

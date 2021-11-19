@@ -34,14 +34,8 @@ public class MasterList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_list);
-
         items = new ArrayList<Item>();
-
-
         this.setTitle("Master List");
-
-
-
     }
 
 
@@ -89,7 +83,7 @@ public class MasterList extends AppCompatActivity {
 
 
 
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
+    private View.OnClickListener onItemClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
@@ -97,7 +91,7 @@ public class MasterList extends AppCompatActivity {
             int itemID = items.get(position).getId();
             Log.d(TAG, "onClick: " + items.get(position).Name + itemID + " " + position);
 
-            Intent intent = new Intent(MasterList.this, DeleteItem.class);
+            Intent intent = new Intent(MasterList.this, GroceryLocation.class);
             intent.putExtra("itemId", itemID);
             startActivity(intent);
 
@@ -149,6 +143,7 @@ public class MasterList extends AppCompatActivity {
         itemList.setLayoutManager(layoutManager);
         itemAdapter = new ItemAdapter(items, this);
         itemList.setAdapter(itemAdapter);
+        itemAdapter.setOnClickListener(onItemClickListener);
 
     }
 

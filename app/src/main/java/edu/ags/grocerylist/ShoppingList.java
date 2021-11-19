@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.BlockingDeque;
 
 public class ShoppingList extends AppCompatActivity {
 
@@ -80,6 +81,25 @@ public class ShoppingList extends AppCompatActivity {
 
     }
 
+    private View.OnClickListener onItemClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Log.d(TAG, "onClick: First Stop");
+            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+            Log.d(TAG, "onClick: Second Stop");
+            int position = viewHolder.getAdapterPosition();
+            Log.d(TAG, "onClick: Third");
+            int itemID = items.get(position).getId();
+           // Log.d(TAG, "onClick: " + items.get(position).Name + itemID + " " + position);
+
+            Intent intent = new Intent(ShoppingList.this, GroceryLocation.class);
+            intent.putExtra("itemId", itemID);
+            startActivity(intent);
+
+            Log.d(TAG, "onClick: Send to delete");
+        }
+    };
+
     private void RebindList() {
         itemList = findViewById(R.id.rvShoppingItems);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -87,6 +107,9 @@ public class ShoppingList extends AppCompatActivity {
         itemList.setLayoutManager(layoutManager);
         itemAdapter = new ItemAdapterSL(items, this);
         itemList.setAdapter(itemAdapter);
+
+        itemAdapter.setOnClickListener(onItemClickListener);
+        Log.d(TAG, "RebindList: WE MADE IT");
 
     }
 

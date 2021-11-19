@@ -51,7 +51,8 @@ public class RestClient {
                                     item.setCheckedState(object.getInt("isOnShoppingList"));
                                     item.setIsInCart(object.getInt("isInCart"));
                                     item.setOwner(object.getString("owner"));
-
+                                    item.setLatitude(object.getDouble("latitude"));
+                                    item.setLongitude(object.getDouble("longitude"));
 
                                     items.add(item);
 
@@ -102,6 +103,8 @@ public class RestClient {
                                     item.setCheckedState(object.getInt("isOnShoppingList"));
                                     item.setIsInCart(object.getInt("isInCart"));
                                     item.setOwner(object.getString("owner"));
+                                    item.setLatitude(object.getDouble("latitude"));
+                                    item.setLongitude(object.getDouble("longitude"));
 
                                     if (item.CheckedState == 1) {
                                         items.add(item);
@@ -152,6 +155,8 @@ public class RestClient {
                                 item.setCheckedState(object.getInt("isOnShoppingList"));
                                 item.setIsInCart(object.getInt("isInCart"));
                                 item.setOwner(object.getString("owner"));
+                                item.setLatitude(object.getDouble("latitude"));
+                                item.setLongitude(object.getDouble("longitude"));
                                 items.add(item);
 
 
@@ -219,6 +224,9 @@ public class RestClient {
             jsonObject.put("isInCart", item.getIsInCart());
             jsonObject.put("isOnShoppingList", item.getCheckedState());
             jsonObject.put("owner", item.getOwner());
+            jsonObject.put("latitude", item.getLatitude());
+            jsonObject.put("longitude", item.getLongitude());
+
 
             final String requestBody = jsonObject.toString();
 

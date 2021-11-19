@@ -21,6 +21,7 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
 
     private ArrayList<Item> itemData;
     private Context parentContext;
+    private View.OnClickListener onClickListener;
 
 
     public class ItemViewHolderSL extends RecyclerView.ViewHolder {
@@ -34,11 +35,18 @@ public class ItemAdapterSL extends RecyclerView.Adapter {
             textViewName = itemView.findViewById(R.id.txtName);
             checkBoxCart = itemView.findViewById(R.id.cbInCart);
 
+            itemView.setTag(this);
+            itemView.setOnClickListener(onClickListener);
+
         }
 
         public TextView getTextViewName() { return textViewName; }
         public CheckBox getCheckBoxCart() { return checkBoxCart; }
 
+    }
+
+    public void setOnClickListener(View.OnClickListener itemClickListener) {
+        onClickListener = itemClickListener;
     }
 
     public ItemAdapterSL(ArrayList<Item> arrayList, Context context) {

@@ -9,32 +9,55 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroceryLocation extends AppCompatActivity {
+public class GroceryLocation extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final String TAG = "myDebug";
     LocationManager locationManager;
     LocationListener locationListener;
     final int PERMISSION_REQUEST_LOCATION = 1001;
+    private static final int PERMISSION_REQUEST_PHONE = 102;
     Item item;
+    GoogleMap gMap;
+
+
+    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationRequest locationRequest;
+    LocationCallback locationCallback;
+    SupportMapFragment mapFragment;
 
 
 
@@ -52,14 +75,17 @@ public class GroceryLocation extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!=null)
         {
-            initTeam(extras.getInt("teamId"));
+            initItem(extras.getInt("itemId"));
 
         }
 
         this.setTitle("MAP");
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
-    private void initTeam(int itemId) {
+    private void initItem(int itemId) {
 
         try {
             Log.d(TAG, "initTeam: "+ ShoppingList.VEHICLETRACKERAPI + itemId);
@@ -92,6 +118,9 @@ public class GroceryLocation extends AppCompatActivity {
         textLat.setText(String.valueOf(item.getLatitude()));
         textLong.setText(String.valueOf(item.getLongitude()));
 
+        mapFragment.getMapAsync( this);
+
+
     }
 
     private void initSaveButton() {
@@ -101,6 +130,7 @@ public class GroceryLocation extends AppCompatActivity {
             public void onClick(View view) {
                 if(item !=null)
                 {
+                    Log.d(TAG, "onClick: Testing out save button");
                     TextView textViewLat = findViewById(R.id.textView_latitude);
                     TextView textViewLong = findViewById(R.id.textView_longitude);
 
@@ -109,6 +139,8 @@ public class GroceryLocation extends AppCompatActivity {
 
                     try {
                         saveToAPI();
+                        RebindItems();
+
                     }
                     catch (Exception e)
                     {
@@ -171,6 +203,7 @@ public class GroceryLocation extends AppCompatActivity {
                     textViewLongitude.setText(String.valueOf(addressList.get(0).getLongitude()));
 
 
+
                 }
                 catch (IOException e)
                 {
@@ -189,6 +222,7 @@ public class GroceryLocation extends AppCompatActivity {
                 changeVisibility(View.INVISIBLE);
 
                 try {
+                    Log.d(TAG, "onClick: ");
 
                     if(Build.VERSION.SDK_INT >= 23)
                     {
@@ -218,6 +252,7 @@ public class GroceryLocation extends AppCompatActivity {
                     }
                     else{
                         startLocationUpdates();
+
                     }
                 }
                 catch (Exception e)
@@ -298,4 +333,90 @@ public class GroceryLocation extends AppCompatActivity {
         Button button = findViewById(R.id.button_find);
         button.setVisibility(visible);
     }
+
+
+    public void onMapReady(GoogleMap googleMap) {
+        try {
+            Log.d(TAG, "onMapReady: Start of Map");
+
+            gMap = googleMap;
+            gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+            Point size = new Point();
+            WindowManager windowManager = getWindowManager();
+            windowManager.getDefaultDisplay().getSize(size);
+            int measuredWidth = size.x;
+            int measuredHeight = size.y;
+
+
+            if (item != null) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                LatLng point = new LatLng(item.getLatitude(), item.getLongitude());
+                builder.include(point);
+
+                gMap.addMarker(new MarkerOptions().position(point)
+                        .title(item.getName())
+                        .snippet(item.getCity() + ": " ));
+
+                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, 15f));
+            } else {
+                Log.d(TAG, "onMapReady: Team is null");
+            }
+
+        } catch (Exception e) {
+            Log.d(TAG, "onMapReady: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.masterList) {
+
+            //Navigate to Master List activity
+            startActivity(new Intent(this, MasterList.class));
+
+            return true;
+        }
+        else if (id == R.id.ShoppingList)
+        {
+            startActivity(new Intent(this, ShoppingList.class));
+
+            return true;
+        }
+        else if (id == R.id.AddItem)
+        {
+            startActivity(new Intent(this, AddItem.class));
+
+            return true;
+        }
+        else if (id == R.id.SetUser)
+        {
+            startActivity(new Intent(this, SharedPreferences.class));
+
+            return true;
+        }
+        else if (id == R.id.Location)
+        {
+            startActivity(new Intent(this, GroceryLocation.class));
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

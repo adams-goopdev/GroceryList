@@ -130,12 +130,12 @@ public class ShoppingList extends AppCompatActivity {
 
             return true;
         }
-/*        else if (id == R.id.DeleteItems)
+        else if (id == R.id.Location)
         {
-            startActivity(new Intent(this, DeleteItem.class));
+            startActivity(new Intent(this, GroceryLocation.class));
 
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }

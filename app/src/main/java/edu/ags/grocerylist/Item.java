@@ -8,6 +8,35 @@ public class Item {
     public int IsInCart;
     public String Owner;
 
+    private String City;
+    private Double Latitude;
+
+    public String getCity() {
+        return City;
+    }
+
+    public void setCity(String city) {
+        City = city;
+    }
+
+    public Double getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        Latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        Longitude = longitude;
+    }
+
+    private Double Longitude;
+
     public Item(int id , String name, int checkedState, int isInCart, String owner)
     {
         Id = id;

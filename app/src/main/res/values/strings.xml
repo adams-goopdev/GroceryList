@@ -15,4 +15,14 @@
     <string name="add_item_to_master">Add Item to Master?</string>
     <string name="UncheckItems">uncheckItems</string>
     <string name="DeleteItems">Delete Items</string>
+    <string name="look_up">look_up</string>
+    <string name="from_my_location">From Location</string>
+    <string name="street_address">address</string>
+    <string name="city">City:</string>
+    <string name="state">State:</string>
+    <string name="zip">Zip Code:</string>
+    <string name="find">Find</string>
+    <string name="save">Save</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
 </resources>

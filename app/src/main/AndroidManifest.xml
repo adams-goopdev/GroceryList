@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.ags.grocerylist">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,6 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryList">
+        <activity
+            android:name=".GroceryLocation"
+            android:exported="true" />
         <activity
             android:name=".SharedPreferences"
             android:exported="true" />
@@ -36,7 +40,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBK89O9XY_yhWyMReNhm8xb5Pog-1GzQmw">
+        </meta-data>
     </application>
 
 </manifest>

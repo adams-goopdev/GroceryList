@@ -27,5 +27,11 @@
         android:title="Set User"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/Location"
+        android:orderInCategory="100"
+        android:title="Location"
+        app:showAsAction="never" />
+
 
 </menu>
